@@ -1,0 +1,29 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  // Phần này chứa các tùy chọn biên dịch của TypeScript, giúp điều chỉnh cách TypeScript kiểm tra và biên dịch mã của dự án.
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    // Bỏ qua kiểm tra kiểu trong các tệp thư viện như các file .d.ts.
+    // Tăng tốc độ biên dịch bằng cách bỏ qua việc kiểm tra kiểu dữ liệu trong các file thư viện, giúp giảm thiểu
+    // lỗi không liên quan từ các thư viện của bên thứ ba.
+    "skipLibCheck": true,
+    // Đảm bảo sử dụng nhất quán kiểu chữ trong tên tệp
+    // Ngăn chặn lỗi liên quan đến việc khác biệt giữa chữ hoa và chữ thường trong tên file
+    "forceConsistentCasingInFileNames": true,
+    // Thiết lập đường dẫn cơ sở cho dự án là thư mục gốc (biểu thị bằng .).
+    "baseUrl": ".",
+    // Thiết lập các bí danh đường dẫn.
+    // Cho phép bạn sử dụng bí danh @/ để thay thế cho src/ trong các import. Ví dụ: thay vì
+    // import MyComponent from '../../src/components/MyComponent',
+    // bạn có thể viết import MyComponent from '@/components/MyComponent'
+    "paths": {
+      "~/*": ["src/*"]
+    }
+    // "paths": {
+    //   "@env": [".env"]
+    // }
+  },
+  "include": ["src/**/*", "env.d.ts"],
+  "exclude": ["node_modules"]
+}
