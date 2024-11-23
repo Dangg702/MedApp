@@ -188,6 +188,7 @@ export const getScheduleTime = async (doctorId: Number, date: string) => {
   }
 };
 export const bookAppointment = async (payload: object) => {
+  console.log('payload', payload);
   const response = await axios.post(
     `${API_URL}/api/booking-appointment`,
     payload,

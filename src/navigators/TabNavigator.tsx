@@ -8,6 +8,7 @@ import HomeScreen from '../screens/HomeScreen';
 import TicketScreen from '../screens/TicketScreen';
 import UserAccountScreen from '../screens/UserAccountScreen';
 import ScheduledScreen from '../screens/ScheduledScreen';
+import Chat from '../screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -31,6 +32,7 @@ const TabIcon = ({name, focused, iconLib = 'Icon'}) => {
 const tabs = [
   {name: 'Home', component: HomeScreen, iconName: 'home'},
   {name: 'Scheduled', component: ScheduledScreen, iconName: 'calendar'},
+  {name: 'questioncircleo', component: Chat, iconName: 'questioncircleo'},
   {
     name: 'Ticket',
     component: TicketScreen,
