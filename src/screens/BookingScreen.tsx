@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
   ScrollView,
   FlatList,
+  Linking,
 } from 'react-native';
 import {
   BORDERRADIUS,
@@ -19,6 +20,9 @@ import {
   FONTSIZE,
   SPACING,
 } from '../theme/theme';
+
+
+
 import AppHeader from '../components/AppHeader';
 import CustomButton from '../components/CustomButton';
 import Icon from 'react-native-vector-icons/Feather';
@@ -32,6 +36,9 @@ import {updateUser} from '../redux/slices/userSlice';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/NavigationTypes';
 import {bookAppointment} from '../services/UserService/UserService';
+
+import axios from 'axios';
+
 
 const BookingScreen = ({navigation}: any) => {
   const user = useSelector((state: RootState) => state.user);
@@ -48,7 +55,6 @@ const BookingScreen = ({navigation}: any) => {
     image,
     price,
   } = route.params;
-
   const handleBooking = async () => {
     const response = await bookAppointment({
       patientId: user.userInfo.id,
@@ -66,7 +72,7 @@ const BookingScreen = ({navigation}: any) => {
       Alert.alert('Đặt lịch thất bại');
     }
   };
-
+ 
   return (
     <View style={styles.container}>
       <StatusBar hidden />

@@ -18,25 +18,20 @@ import BookingScreen from './src/screens/BookingScreen';
 
 const Stack = createNativeStackNavigator();
 
-const screens = [
-  {name: 'Tab', component: TabNavigator, animation: 'default'},
-  {name: 'Settings', component: SettingScreen},
-  {name: 'ResetPassword', component: ResetPasswordScreen},
-  {name: 'ConfirmDelAccount', component: ConfirmDelAccountScreen},
-  {name: 'LogIn', component: LoginScreen},
-  {name: 'SignUp', component: SignUpScreen},
-  {name: 'ForgetPassword', component: ForgetPasswordScreen},
-  {name: 'Search', component: SearchScreen},
-  {name: 'DoctorDetail', component: DoctorDetailScreen},
-  {name: 'HospitalDetail', component: HospitalDetailScreen},
-  {name: 'Booking', component: BookingScreen},
-];
+// HOC for private screens
+const PrivateScreen = ({children, navigation}: any) => {
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-const privateScreens = [{name: 'Booking', component: BookingScreen}];
+  React.useEffect(() => {
+    if (!isLoggedIn) {
+      navigation.navigate('LogIn'); // Redirect to login if not logged in
+    }
+  }, [isLoggedIn, navigation]);
+
+  return isLoggedIn ? children : null; // Render screen only if logged in
+};
 
 const App = () => {
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  console.log('app user', isLoggedIn);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -44,28 +39,28 @@ const App = () => {
           headerShown: false,
           animation: 'slide_from_right',
         }}>
-        <>
-          {/* {isLoggedIn && (
-            <>
-              {privateScreens.map(({name, component, animation}) => (
-                <Stack.Screen
-                  key={name}
-                  name={name}
-                  component={component}
-                  options={{animation}}
-                />
-              ))}
-            </>
-          )} */}
-          {screens.map(({name, component, animation}) => (
-            <Stack.Screen
-              key={name}
-              name={name}
-              component={component}
-              options={{animation}}
-            />
-          ))}
-        </>
+        {/* Public Screens */}
+        <Stack.Screen name="Tab" component={TabNavigator} />
+        <Stack.Screen name="Settings" component={SettingScreen} />
+        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+        <Stack.Screen name="ConfirmDelAccount" component={ConfirmDelAccountScreen} />
+        <Stack.Screen name="LogIn" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="DoctorDetail" component={DoctorDetailScreen} />
+        <Stack.Screen name="HospitalDetail" component={HospitalDetailScreen} />
+
+        {/* Private Screen */}
+        <Stack.Screen
+          name="Booking"
+          options={{animation: 'default'}}
+          children={(props) => (
+            <PrivateScreen navigation={props.navigation}>
+              <BookingScreen {...props} />
+            </PrivateScreen>
+          )}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
