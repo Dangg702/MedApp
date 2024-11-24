@@ -32,13 +32,13 @@ const TabIcon = ({name, focused, iconLib = 'Icon'}) => {
 const tabs = [
   {name: 'Home', component: HomeScreen, iconName: 'home'},
   {name: 'Scheduled', component: ScheduledScreen, iconName: 'calendar'},
-  {name: 'questioncircleo', component: Chat, iconName: 'questioncircleo'},
-  {
-    name: 'Ticket',
-    component: TicketScreen,
-    iconName: 'newspaper-o',
-    iconLib: 'FontAwesomeIcon',
-  },
+  {name: 'questioncircleo', component: Chat, iconName: 'message-square'},
+  // {
+  //   name: 'Ticket',
+  //   component: TicketScreen,
+  //   iconName: 'newspaper-o',
+  //   iconLib: 'FontAwesomeIcon',
+  // },
   {name: 'User', component: UserAccountScreen, iconName: 'user'},
 ];
 

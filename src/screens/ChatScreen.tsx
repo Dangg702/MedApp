@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { useMutationHooks } from '../hooks/useMutationHooks';
-import { getChat } from '../services/ChatService/Chat';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import {useMutationHooks} from '../hooks/useMutationHooks';
+import {getChat} from '../services/ChatService/Chat';
+import { COLORS } from '../theme/theme';
 
 const Chat = () => {
-  const [messages, setMessages] = useState<Array<{ text: string; sender: string }>>([]);
+  const [messages, setMessages] = useState<
+    Array<{text: string; sender: string}>
+  >([]);
   const [input, setInput] = useState<string>('');
 
   // Sử dụng hook mutation để lấy dữ liệu chat
@@ -14,24 +24,24 @@ const Chat = () => {
   useEffect(() => {
     if (mutationChat.data) {
       const responseMessage = mutationChat.data; // Lấy dữ liệu trả về từ server
-      const serverMessage = { text: responseMessage, sender: 'Nhân viên tư vấn' };
+      const serverMessage = {text: responseMessage, sender: 'Nhân viên tư vấn'};
 
       // Cập nhật tin nhắn trả về từ server vào state
-      setMessages((prevMessages) => [...prevMessages, serverMessage]);
+      setMessages(prevMessages => [...prevMessages, serverMessage]);
     }
   }, [mutationChat.data]);
 
   // Hàm gửi tin nhắn từ client
   const handleSend = async () => {
     if (input.trim()) {
-      const userMessage = { text: input, sender: 'You' };
+      const userMessage = {text: input, sender: 'You'};
 
       // Cập nhật tin nhắn người dùng vào state
-      setMessages((prevMessages) => [...prevMessages, userMessage]);
+      setMessages(prevMessages => [...prevMessages, userMessage]);
       setInput(''); // Reset input
 
       // Gửi tin nhắn tới server
-      const newChat = { message: input };
+      const newChat = {message: input};
       mutationChat.mutate(newChat); // Gửi tin nhắn tới backend
     }
   };
@@ -52,9 +62,10 @@ const Chat = () => {
             key={index}
             style={[
               styles.chatMessage,
-              message.sender === 'You' ? styles.chatMessageYou : styles.chatMessageOther,
-            ]}
-          >
+              message.sender === 'You'
+                ? styles.chatMessageYou
+                : styles.chatMessageOther,
+            ]}>
             <Text style={styles.messageSender}>{message.sender}: </Text>
             <Text style={styles.messageText}>{message.text}</Text>
           </View>
@@ -86,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5', // Nền tổng thể sáng
   },
   header: {
-    backgroundColor: '#007bff',
+    backgroundColor: COLORS.MainColor,
     padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
@@ -142,7 +153,7 @@ const styles = StyleSheet.create({
     color: '#000', // Màu chữ đen
   },
   sendButton: {
-    backgroundColor: '#007bff',
+    backgroundColor: COLORS.MainColor,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 5,
