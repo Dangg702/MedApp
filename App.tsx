@@ -15,6 +15,8 @@ import SearchScreen from './src/screens/SearchScreen';
 import DoctorDetailScreen from './src/screens/DoctorDetailScreen';
 import HospitalDetailScreen from './src/screens/HospitalDetailScreen';
 import BookingScreen from './src/screens/BookingScreen';
+import ScheduledScreen from './src/screens/ScheduledScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +25,7 @@ const PrivateScreen = ({children, navigation}: any) => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   React.useEffect(() => {
+    console.log('isLoggedIn:', isLoggedIn);
     if (!isLoggedIn) {
       navigation.navigate('LogIn'); // Redirect to login if not logged in
     }
@@ -61,6 +64,16 @@ const App = () => {
             </PrivateScreen>
           )}
         />
+        <Stack.Screen
+          name="Scheduled"
+          options={{animation: 'default'}}
+          children={(props) => (
+            <PrivateScreen navigation={props.navigation}>
+              <ScheduledScreen {...props} />
+            </PrivateScreen>
+          )}
+/>
+
       </Stack.Navigator>
     </NavigationContainer>
   );

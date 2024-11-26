@@ -10,18 +10,42 @@ import {
   Image,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import {RootState} from '~/redux/store';
+import {RootState} from '../redux/store';
 import {COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
 import Icon from 'react-native-vector-icons/Feather';
 import AppHeader from '../components/AppHeader';
 import AppointmentCard from '../components/AppointmentCard';
 import {getListAppointmentOfPatient} from '../services/UserService/UserService';
-
+import {useFocusEffect} from '@react-navigation/native';
 const {width, hight} = Dimensions.get('screen');
 
 const ScheduledScreen = ({navigation}: any) => {
   const user = useSelector((state: RootState) => state.user);
   const scheduledData = useSelector((state: RootState) => state.appointment);
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  console.log('isLoggedIn:', isLoggedIn);
+  const [redirected, setRedirected] = useState(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Nếu chưa đăng nhập và chưa chuyển hướng trước đó
+      if (!isLoggedIn && !redirected) {
+        setRedirected(true); // Đánh dấu đã chuyển hướng
+        navigation.navigate('LogIn');
+      }
+    }, [isLoggedIn, redirected, navigation]),
+  );
+
+  // Reset trạng thái "đã chuyển hướng" khi rời màn hình
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setRedirected(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
+  if (!isLoggedIn) {
+    return null; // Chặn render nếu chưa đăng nhập
+  }
 
   return (
     <View style={styles.container}>

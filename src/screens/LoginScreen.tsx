@@ -96,7 +96,7 @@ const LoginScreen = ({navigation}: any) => {
         })
       );
 
-      navigation.navigate('Home');
+      navigation.goBack();
       setEmail('');
       setPassword('');
     } else if (dataUser && Number(dataUser.errCode) !== 0) {
