@@ -158,7 +158,9 @@ export const cancelAppointment = async (
     `${API_URL}/api/cancel-appointment`,
     cancelData,
   );
+  console.log('cancelData',cancelData);
   const {data} = response;
+  console.log('data from server',data);
   return data;
   // if (data && data.errCode === 0) {
   // } else {
@@ -236,3 +238,4 @@ export const getDoctorsBySpecialty = async (specialtyName: string) => {
     throw new Error('Failed to fetch doctors by specialty id');
   }
 };
+

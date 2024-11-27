@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,13 +20,18 @@ import {
   CancelResponseType,
 } from '../services/UserService/typeUserService';
 import {resetAppointment} from '../redux/slices/appointmentSlice';
-
+import userService from '../services/UserService/UserService';
+import axios from 'axios';
+export const axiosJWT = axios.create();
+import {API_URL} from '@env';
 const AppointmentCard = (props: any) => {
   const dispatch = useDispatch();
   const scheduledData = useSelector((state: RootState) => state.appointment);
   // console.log('AppointmentCard scheduledData: ', scheduledData);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const {
     doctorId,
     doctorImage,
@@ -39,7 +44,29 @@ const AppointmentCard = (props: any) => {
     patientId,
     aptmTimeType,
   } = props.data;
+  console.log('patientId: ', patientId);
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/list-my-appointment?id=${patientId}`);
+        if (response.data.errCode === 0) {
+          setAppointments(response.data.data);
+          const appointments = response.data.data;
+          const appointmentIds = appointments.map(appointment => appointment.id);
+          console.log('Appointment IDs:', appointmentIds);
+        } else {
+          setError(response.data.message);
+        }
+      } catch (err) {
+        setError('Failed to fetch appointments');
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchAppointments();
+  }, [patientId]);
   const mutationAppointment = useMutationHooks<
     CancelResponseType,
     CancelAppointmentType
@@ -47,11 +74,13 @@ const AppointmentCard = (props: any) => {
   const {data} = mutationAppointment;
 
   const handleCancelAppointment = async () => {
+    const bookingId = appointments.length > 0 ? appointments[0].id : null;
     let cancelData = {
       doctorId: doctorId,
       patientId: patientId,
       date: aptmDate,
       timeType: aptmTimeType,
+      bookingId: bookingId,
     };
     try {
       // const response = await cancelAppointment(cancelData);
