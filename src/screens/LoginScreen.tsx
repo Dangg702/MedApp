@@ -50,14 +50,48 @@ const LoginScreen = ({navigation}: any) => {
   const handleLoginUser = () => {
     if (email === '' || password === '') {
       Alert.alert('Xin hãy nhập đầy đủ thông tin');
+      return;
     }
-
+  
     const newLoginUser: LoginUserType = {
       email: email,
       password: password,
     };
-    mutationLoginUser.mutate(newLoginUser);
+  
+    // Gọi mutation và xử lý kết quả
+    mutationLoginUser.mutate(newLoginUser, {
+      onSuccess: (dataUser) => {
+        if (dataUser && Number(dataUser.errCode) === 0) {
+          setAccess_token1(dataUser.tokens.accessToken);
+          setRefresh_token1(dataUser.tokens.refreshToken);
+  
+          // Lưu token vào AsyncStorage
+          storeData('access_token', JSON.stringify(dataUser.tokens.accessToken));
+          storeData('refresh_token', JSON.stringify(dataUser.tokens.refreshToken));
+  
+          // Cập nhật người dùng vào Redux
+          dispatch(
+            updateUser({
+              accessToken: dataUser.tokens.accessToken,
+              refreshToken: dataUser.tokens.refreshToken,
+              userInfo: dataUser.data,
+              userRole: dataUser.data.roleId,
+            })
+          );
+  
+          // Điều hướng về trang trước
+          navigation.goBack();
+          setEmail('');
+          setPassword('');
+        }
+      },
+      onError: (error) => {
+        // Hiển thị thông báo khi có lỗi trong quá trình gọi API
+        Alert.alert('Sai mật khẩu. Vui lòng nhập lại');
+      },
+    });
   };
+  
 
   const storeData = async (key: string, value: string) => {
     try {
@@ -67,43 +101,9 @@ const LoginScreen = ({navigation}: any) => {
     }
   };
 
-  const getData = async (key: string) => {
-    try {
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        return value;
-      }
-    } catch (e) {
-      console.error('Error fetching data', e);
-    }
-  };
+ 
 
-  // Lưu vào redux
-  useEffect(() => {
-    if (dataUser && Number(dataUser.errCode) === 0) {
-      setAccess_token1(dataUser.tokens.accessToken);
-      setRefresh_token1(dataUser.tokens.refreshToken);
-
-      storeData('access_token', JSON.stringify(access_token1));
-      storeData('refresh_token', JSON.stringify(refresh_token1));
-
-      dispatch(
-        updateUser({
-          accessToken: dataUser.tokens.accessToken,
-          refreshToken: dataUser.tokens.refreshToken,
-          userInfo: dataUser.data,
-          userRole: dataUser.data.roleId,
-        })
-      );
-
-      navigation.goBack();
-      setEmail('');
-      setPassword('');
-    } else if (dataUser && Number(dataUser.errCode) !== 0) {
-      Alert.alert('Đăng nhập thất bại', 'Xin vui lòng thử lại');
-    }
-  }, [dataUser]);
-
+  
   return (
     <View style={styles.container}>
       <StatusBar hidden />
