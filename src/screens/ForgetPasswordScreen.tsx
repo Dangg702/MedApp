@@ -1,23 +1,35 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {View, StyleSheet, StatusBar, Text, TextInput} from 'react-native';
 import {
-  View,
-  StyleSheet,
-  Dimensions,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import {BORDERRADIUS, COLORS, FONTFAMILY, FONTSIZE, SPACING} from '../theme/theme';
+  BORDERRADIUS,
+  COLORS,
+  FONTFAMILY,
+  FONTSIZE,
+  SPACING,
+} from '../theme/theme';
 import AppHeader from '../components/AppHeader';
 import CustomButton from '../components/CustomButton';
-import Icon from 'react-native-vector-icons/Feather';
-
-const {width} = Dimensions.get('window');
 
 const ForgetPasswordScreen = ({navigation}: any) => {
   const [password, setPassword] = useState<string>('');
+  const [rePassword, setRePassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [otp, setOtp] = useState<string>('');
+  const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
+  const [isVerify, setIsVerify] = useState<boolean>(false);
+
+  const handleSendOtp = () => {
+    if (!isSendOtp) {
+      setIsSendOtp(true);
+      setIsVerify(false);
+      // Call API to send OTP
+    } else if (!isVerify) {
+      setIsVerify(true);
+      // Call API to verify OTP
+    } else {
+      // Call API to reset password
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -39,23 +51,65 @@ const ForgetPasswordScreen = ({navigation}: any) => {
             <Text style={styles.logoTextOrange}>Med</Text>
             <Text style={styles.logoTextBlue}>Sched</Text>
           </Text>
+          {!isSendOtp ? (
+            <>
+              <Text style={styles.heading}>Quên mật khẩu</Text>
+              <Text style={styles.heading}>
+                Nhập email đã đăng ký để nhận mã xác thực
+              </Text>
 
-          <Text style={styles.heading}>Quên mật khẩu</Text>
-          <Text style={styles.heading}>
-            Nhập email đã đăng ký để nhận mã xác thực
-          </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="abc12@gmail.com"
+                placeholderTextColor={COLORS.LightGrey}
+                value={email}
+                onChangeText={setEmail}
+              />
+            </>
+          ) : !isVerify ? (
+            <>
+              <Text style={styles.heading}>Xác thực OTP</Text>
+              <Text style={styles.heading}>
+                Nhập mã xác thực đã gửi đến email
+              </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="abc12@gmail.com"
-            placeholderTextColor={COLORS.LightGrey}
-            value={email}
-            onChangeText={setEmail}
-          />
+              <TextInput
+                style={styles.input}
+                placeholder="123456"
+                placeholderTextColor={COLORS.LightGrey}
+                value={otp}
+                onChangeText={setOtp}
+              />
+            </>
+          ) : (
+            <>
+              <Text style={styles.heading}>Đặt lại mật khẩu</Text>
+              <Text style={styles.heading}>Nhập mật khẩu mới để cập nhật</Text>
+
+              <TextInput
+                style={styles.input}
+                placeholder="Mật khẩu mới"
+                placeholderTextColor={COLORS.LightGrey}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Nhập lại mật khẩu mới"
+                placeholderTextColor={COLORS.LightGrey}
+                value={rePassword}
+                onChangeText={setRePassword}
+              />
+            </>
+          )}
         </View>
 
         <View>
-          <CustomButton title="Tiếp tục" />
+          {!isVerify ? (
+            <CustomButton title="Tiếp tục" onPress={handleSendOtp} />
+          ) : (
+            <CustomButton title="Hoàn tất" onPress={handleSendOtp} />
+          )}
         </View>
       </View>
     </View>

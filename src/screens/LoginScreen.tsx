@@ -113,7 +113,7 @@ const LoginScreen = ({navigation}: any) => {
         header=""
         containerStyle={{backgroundColor: COLORS.White}}
         iconColor={COLORS.Text}
-        action={navigation.goBack}
+        action={() => navigation.navigate('Home')}
       />
 
       <View style={styles.bodyContent}>
