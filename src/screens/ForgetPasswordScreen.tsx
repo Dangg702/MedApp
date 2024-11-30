@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, StatusBar, Text, TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, StatusBar, Text, TextInput, Alert } from 'react-native';
 import {
   BORDERRADIUS,
   COLORS,
@@ -9,8 +9,10 @@ import {
 } from '../theme/theme';
 import AppHeader from '../components/AppHeader';
 import CustomButton from '../components/CustomButton';
+import axios from 'axios';
+import {API_URL} from '@env';
 
-const ForgetPasswordScreen = ({navigation}: any) => {
+const ForgetPasswordScreen = ({ navigation }: any) => {
   const [password, setPassword] = useState<string>('');
   const [rePassword, setRePassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -18,28 +20,72 @@ const ForgetPasswordScreen = ({navigation}: any) => {
   const [isSendOtp, setIsSendOtp] = useState<boolean>(false);
   const [isVerify, setIsVerify] = useState<boolean>(false);
 
-  const handleSendOtp = () => {
+  // Gửi yêu cầu kiểm tra email và gửi OTP
+  const handleSendOtp = async () => {
     if (!isSendOtp) {
-      setIsSendOtp(true);
-      setIsVerify(false);
-      // Call API to send OTP
+      try {
+        const response = await axios.post(`${API_URL}/check-email`, { emailUser: email });
+        if (response.data.status === 'OK') {
+          Alert.alert('Thông báo', 'OTP đã được gửi đến email của bạn.');
+          setIsSendOtp(true);
+        } else {
+          Alert.alert('Thông báo', 'Email không tồn tại.');
+        }
+      } catch (error) {
+        Alert.alert('Lỗi', 'Không thể gửi OTP.');
+      }
     } else if (!isVerify) {
-      setIsVerify(true);
-      // Call API to verify OTP
-    } else {
-      // Call API to reset password
+      try {
+        const response = await axios.post(`${API_URL}/check-otp`, { otp, email });
+        if (response.data.status === 'OK') {
+          Alert.alert('Thông báo', 'OTP xác thực thành công.');
+          setIsVerify(true);
+        } else {
+          Alert.alert('Thông báo', 'OTP không hợp lệ hoặc đã hết hạn.');
+        }
+      } catch (error) {
+        Alert.alert('Lỗi', 'Không thể xác thực OTP.');
+      }
+    }
+  };
+
+  // Đặt lại mật khẩu
+  const handleChangePassword = async () => {
+    console.log(otp,
+      email,
+      password,
+      rePassword,);
+    if (password !== rePassword) {
+      Alert.alert('Thông báo', 'Mật khẩu không khớp.');
+      return;
+    }
+
+    try {
+      const response = await axios.put(`${API_URL}/change-password`, {
+        otp,
+        email,
+        anewpassword: password,
+        passwordRetrieval:rePassword,
+      });
+      if (response.data.status === 'OK') {
+        Alert.alert('Thông báo', 'Mật khẩu đã được thay đổi thành công.');
+        navigation.goBack();
+      } else {
+        Alert.alert('Thông báo', 'Thay đổi mật khẩu thất bại.');
+      }
+    } catch (error) {
+      Alert.alert('Lỗi', 'Không thể thay đổi mật khẩu.');
     }
   };
 
   return (
     <View style={styles.container}>
       <StatusBar hidden />
-
       <View>
         <AppHeader
           name="close"
           header={''}
-          containerStyle={{backgroundColor: COLORS.White}}
+          containerStyle={{ backgroundColor: COLORS.White }}
           iconColor={COLORS.Text}
           action={() => navigation.goBack()}
         />
@@ -57,7 +103,6 @@ const ForgetPasswordScreen = ({navigation}: any) => {
               <Text style={styles.heading}>
                 Nhập email đã đăng ký để nhận mã xác thực
               </Text>
-
               <TextInput
                 style={styles.input}
                 placeholder="abc12@gmail.com"
@@ -72,7 +117,6 @@ const ForgetPasswordScreen = ({navigation}: any) => {
               <Text style={styles.heading}>
                 Nhập mã xác thực đã gửi đến email
               </Text>
-
               <TextInput
                 style={styles.input}
                 placeholder="123456"
@@ -85,11 +129,11 @@ const ForgetPasswordScreen = ({navigation}: any) => {
             <>
               <Text style={styles.heading}>Đặt lại mật khẩu</Text>
               <Text style={styles.heading}>Nhập mật khẩu mới để cập nhật</Text>
-
               <TextInput
                 style={styles.input}
                 placeholder="Mật khẩu mới"
                 placeholderTextColor={COLORS.LightGrey}
+                secureTextEntry
                 value={password}
                 onChangeText={setPassword}
               />
@@ -97,6 +141,7 @@ const ForgetPasswordScreen = ({navigation}: any) => {
                 style={styles.input}
                 placeholder="Nhập lại mật khẩu mới"
                 placeholderTextColor={COLORS.LightGrey}
+                secureTextEntry
                 value={rePassword}
                 onChangeText={setRePassword}
               />
@@ -108,7 +153,7 @@ const ForgetPasswordScreen = ({navigation}: any) => {
           {!isVerify ? (
             <CustomButton title="Tiếp tục" onPress={handleSendOtp} />
           ) : (
-            <CustomButton title="Hoàn tất" onPress={handleSendOtp} />
+            <CustomButton title="Hoàn tất" onPress={handleChangePassword} />
           )}
         </View>
       </View>
@@ -127,15 +172,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
     paddingHorizontal: SPACING.space_20,
-  },
-  signInBtn: {
-    backgroundColor: COLORS.BgGrey,
-    borderWidth: 1,
-    borderColor: COLORS.LightGrey,
-  },
-  signInText: {
-    color: COLORS.Grey,
-    fontSize: FONTSIZE.size_16,
   },
   logoText: {
     fontSize: 30,
@@ -162,32 +198,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.space_15,
     fontSize: FONTSIZE.size_16,
     marginBottom: SPACING.space_15,
-  },
-  icon: {
-    marginRight: SPACING.space_10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: SPACING.space_10,
-  },
-  flexOne: {
-    flex: 1,
-  },
-  forgotPassword: {
-    textAlign: 'right',
-    color: COLORS.Text,
-    marginTop: SPACING.space_10,
-    fontSize: FONTSIZE.size_16,
-  },
-  inputBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textInput: {
-    width: '90%',
-    fontFamily: FONTFAMILY.roboto_regular,
-    fontSize: FONTSIZE.size_14,
-    color: COLORS.Grey,
   },
 });
 
