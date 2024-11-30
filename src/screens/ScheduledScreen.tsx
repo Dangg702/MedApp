@@ -22,6 +22,7 @@ const {width, hight} = Dimensions.get('screen');
 const ScheduledScreen = ({navigation}: any) => {
   const user = useSelector((state: RootState) => state.user);
   const scheduledData = useSelector((state: RootState) => state.appointment);
+  console.log('scheduledData',scheduledData);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   console.log('isLoggedIn:', isLoggedIn);
   const [redirected, setRedirected] = useState(false);

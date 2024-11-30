@@ -44,7 +44,7 @@ const AppointmentCard = (props: any) => {
     patientId,
     aptmTimeType,
   } = props.data;
-  console.log('patientId: ', patientId);
+  console.log('patientId1: ', patientId);
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -59,7 +59,7 @@ const AppointmentCard = (props: any) => {
         }
       } catch (err) {
         setError('Failed to fetch appointments');
-        console.log(err);
+        console.log('err:',err);
       } finally {
         setLoading(false);
       }
@@ -75,13 +75,19 @@ const AppointmentCard = (props: any) => {
 
   const handleCancelAppointment = async () => {
     const bookingId = appointments.length > 0 ? appointments[0].id : null;
+    const doctorId = appointments.length > 0 ? appointments[0].doctorId : null;
+    const patientId = appointments.length > 0 ? appointments[0].patientId : null;
+    const date = appointments.length > 0 ? appointments[0].date : null;
+    const timeType = appointments.length > 0 ? appointments[0].timeType : null;
+
     let cancelData = {
       doctorId: doctorId,
       patientId: patientId,
-      date: aptmDate,
-      timeType: aptmTimeType,
+      date: date,
+      timeType: timeType,
       bookingId: bookingId,
     };
+    console.log('cancelData',cancelData);
     try {
       // const response = await cancelAppointment(cancelData);
       mutationAppointment.mutate(cancelData, {
