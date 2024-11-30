@@ -17,7 +17,6 @@ import HospitalDetailScreen from './src/screens/HospitalDetailScreen';
 import BookingScreen from './src/screens/BookingScreen';
 import ScheduledScreen from './src/screens/ScheduledScreen';
 
-
 const Stack = createNativeStackNavigator();
 
 // HOC for private screens
@@ -25,7 +24,6 @@ const PrivateScreen = ({children, navigation}: any) => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   React.useEffect(() => {
-    console.log('isLoggedIn:', isLoggedIn);
     if (!isLoggedIn) {
       navigation.navigate('LogIn'); // Redirect to login if not logged in
     }
@@ -46,7 +44,10 @@ const App = () => {
         <Stack.Screen name="Tab" component={TabNavigator} />
         <Stack.Screen name="Settings" component={SettingScreen} />
         <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-        <Stack.Screen name="ConfirmDelAccount" component={ConfirmDelAccountScreen} />
+        <Stack.Screen
+          name="ConfirmDelAccount"
+          component={ConfirmDelAccountScreen}
+        />
         <Stack.Screen name="LogIn" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
@@ -58,7 +59,7 @@ const App = () => {
         <Stack.Screen
           name="Booking"
           options={{animation: 'default'}}
-          children={(props) => (
+          children={props => (
             <PrivateScreen navigation={props.navigation}>
               <BookingScreen {...props} />
             </PrivateScreen>
@@ -67,13 +68,12 @@ const App = () => {
         <Stack.Screen
           name="Scheduled"
           options={{animation: 'default'}}
-          children={(props) => (
+          children={props => (
             <PrivateScreen navigation={props.navigation}>
               <ScheduledScreen {...props} />
             </PrivateScreen>
           )}
-/>
-
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
