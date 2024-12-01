@@ -1,3 +1,6 @@
+
+
+
 import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -18,7 +21,6 @@ import BookingScreen from './src/screens/BookingScreen';
 import ScheduledScreen from './src/screens/ScheduledScreen';
 
 const Stack = createNativeStackNavigator();
-
 // HOC for private screens
 const PrivateScreen = ({children, navigation}: any) => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);

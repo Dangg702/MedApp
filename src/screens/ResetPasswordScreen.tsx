@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 15,
+    color:COLORS.Black,
   },
 });
 

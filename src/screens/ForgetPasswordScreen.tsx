@@ -198,6 +198,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.space_15,
     fontSize: FONTSIZE.size_16,
     marginBottom: SPACING.space_15,
+    color:COLORS.Black,
+
   },
 });
 
