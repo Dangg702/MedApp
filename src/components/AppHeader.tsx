@@ -33,7 +33,8 @@ export default AppHeader;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 72,
+    height: 'auto',
+    paddingVertical: SPACING.space_10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

@@ -98,11 +98,13 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     backgroundColor: COLORS.White,
+    height: 'auto',
+    paddingVertical: SPACING.space_8,
   },
   headerText: {
     color: COLORS.Text,
     fontWeight: 600,
-    fontSize: FONTSIZE.size_24,
+    fontSize: FONTSIZE.size_20,
   },
   appointmentStyle: {
     marginTop: SPACING.space_20,
