@@ -155,7 +155,7 @@ export const cancelAppointment = async (
   cancelData: CancelAppointmentType,
 ): Promise<CancelResponseType> => {
   const response = await axios.post(
-    `${API_URL}/api/cancel-appointment`,
+    `${API_URL}/api/cancel-appointmentapp`,
     cancelData,
   );
   console.log('cancelData',cancelData);

@@ -31,14 +31,16 @@ import {RootState} from '~/redux/store';
 import {LoginUserType} from '~/services/UserService/typeUserService';
 import {useMutationHooks} from '../hooks/useMutationHooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getDetailsUser, LoginUser} from '../services/UserService/UserService';
+import {getDetailsUser, getListAppointmentOfPatient, getListAppointmentOfPatientById, LoginUser} from '../services/UserService/UserService';
 import {updateUser} from '../redux/slices/userSlice';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamList} from '../navigation/NavigationTypes';
 import {bookAppointment} from '../services/UserService/UserService';
 
 import axios from 'axios';
-
+export const axiosJWT = axios.create();
+import {API_URL} from '@env';
+import { updateAppointment } from '../redux/slices/appointmentSlice';
 
 const BookingScreen = ({navigation}: any) => {
   const user = useSelector((state: RootState) => state.user);
@@ -55,7 +57,58 @@ const BookingScreen = ({navigation}: any) => {
     image,
     price,
   } = route.params;
+  const generateRandomPaymentData = () => {
+    return {
+      captureId: Math.random().toString(36).substring(2, 15), // Random string
+      amount: Math.floor(Math.random() * 1000) + 1, // Random amount between 1 and 1000
+      currency: 'VND', // Currency type
+      status: 'pending' // Payment status
+    };
+  }
+  const dispatch = useDispatch();
+
+const mutationAppointment = useMutationHooks(
+  async (patientId: number) => {
+    return await getListAppointmentOfPatient(patientId);
+  },
+  {
+    onSuccess: data => {
+      if (data) {
+        const lastItemData = data.at(-1);
+        const newData = {
+          doctorImage: lastItemData.doctorBookingData.image,
+          doctorName: `${lastItemData.doctorBookingData.lastName} ${lastItemData.doctorBookingData.firstName}`,
+          hospitalName:
+            lastItemData.doctorBookingData.doctorInfoData.clinicData.name,
+          aptmDate: lastItemData.date,
+          aptmTime: lastItemData.timeBookingData.valueVi,
+          specialtyName:
+            lastItemData.doctorBookingData.doctorInfoData.specialtyData
+              .valueVi,
+          patientName: `${user.userInfo.lastName} ${user.userInfo.firstName}`,
+          patientId: user.userInfo.id,
+          doctorId: lastItemData.doctorBookingData.id,
+          aptmTimeType: lastItemData.timeBookingData.keyMap,
+          scheduledId: lastItemData.id,
+        };
+
+        dispatch(updateAppointment(newData)); // Cập nhật Redux state
+        
+      } else {
+        return null;
+      }
+    },
+  },
+);
+const getUserScheduled = async () => {
+  if (user.isLoggedIn) {
+    const patientId = user.userInfo.id;
+    //call api and update redux
+    mutationAppointment.mutate(patientId);
+  }
+};
   const handleBooking = async () => {
+    const paymentData = generateRandomPaymentData();
     const response = await bookAppointment({
       patientId: user.userInfo.id,
       doctorId,
@@ -64,9 +117,12 @@ const BookingScreen = ({navigation}: any) => {
       timeType,
       language: 'vi',
       timeVal: time,
+      paymentData,
     });
+    
     if (response) {
       Alert.alert(response.message);
+      getUserScheduled();
       navigation.navigate('Scheduled');
     } else {
       Alert.alert('Đặt lịch thất bại');
