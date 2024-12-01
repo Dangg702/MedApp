@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     textTransform: 'uppercase',
-    fontSize: FONTSIZE.size_18,
+    fontSize: FONTSIZE.size_16,
     color: COLORS.Text,
     fontWeight: '600',
     marginTop: 18,
@@ -237,17 +237,17 @@ const styles = StyleSheet.create({
   },
   subTitleText: {
     textTransform: 'uppercase',
-    fontSize: FONTSIZE.size_16,
+    fontSize: FONTSIZE.size_14,
     color: COLORS.LightGrey,
     fontWeight: '600',
     marginBottom: SPACING.space_12,
   },
   textBody: {
-    fontSize: FONTSIZE.size_16,
+    fontSize: FONTSIZE.size_14,
     color: COLORS.Grey,
   },
   textStrong: {
-    fontSize: FONTSIZE.size_16,
+    fontSize: FONTSIZE.size_14,
     color: COLORS.Text,
     fontWeight: '600',
   },
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
     marginHorizontal: SPACING.space_16,
   },
   doctorInfoWrapper: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
@@ -268,9 +269,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: BORDERRADIUS.radius_25 * 4,
+    objectFit: 'cover',
   },
   doctorInfo: {
-    marginLeft: SPACING.space_16,
+    flex: 1,
+    marginLeft: SPACING.space_8,
   },
   rowDisplay: {
     flexDirection: 'row',

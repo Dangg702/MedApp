@@ -181,6 +181,10 @@ const SearchScreen = () => {
       });
     } else if (role === 'specialty') {
       // chưa biết hiển thị như nào
+    } else if (role === 'search' && type === 'all') {
+      navigation.navigate('DoctorDetail', {
+        doctorId: id,
+      });
     }
   };
 
@@ -280,6 +284,7 @@ const styles = StyleSheet.create({
   backBtnWrapper: {
     width: '10%',
     paddingTop: 10,
+    marginLeft: 16,
   },
   inputBox: {
     backgroundColor: COLORS.DarkGrey,
