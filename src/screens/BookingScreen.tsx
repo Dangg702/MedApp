@@ -121,7 +121,7 @@ const getUserScheduled = async () => {
     });
     
     if (response) {
-      Alert.alert(response.message);
+      Alert.alert('Bạn đã đặt lịch thành công, Vui lòng kiểm tra email.');
       getUserScheduled();
       navigation.navigate('Scheduled');
     } else {

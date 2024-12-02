@@ -17,7 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {RootState} from '../redux/store';
 import Icon from 'react-native-vector-icons/Feather';
-
+const defaultAvatar = require('../assets/image/avatar.png');
 const UserAccountScreen = ({navigation}: any) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
@@ -48,7 +48,9 @@ const UserAccountScreen = ({navigation}: any) => {
       {user.isLoggedIn ? (
         <View style={styles.profileContainer}>
           <Image
-            source={{uri: user.userInfo.image}}
+            source={
+              user.userInfo.image ? {uri: user.userInfo.image} : defaultAvatar
+            }
             style={styles.avatarImage}
           />
           <View style={styles.profileDetailWrapper}>

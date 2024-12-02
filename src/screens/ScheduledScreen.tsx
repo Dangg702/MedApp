@@ -22,9 +22,7 @@ const {width, hight} = Dimensions.get('screen');
 const ScheduledScreen = ({navigation}: any) => {
   const user = useSelector((state: RootState) => state.user);
   const scheduledData = useSelector((state: RootState) => state.appointment);
-  console.log('scheduledData',scheduledData);
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  console.log('isLoggedIn:', isLoggedIn);
   const [redirected, setRedirected] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
@@ -55,7 +53,7 @@ const ScheduledScreen = ({navigation}: any) => {
         <AppHeader
           name="close"
           header={'Lịch khám'}
-          action={() => navigation.goBack()}
+          action={() => navigation.navigate('Home')}
           containerStyle={styles.headerStyle}
           iconColor={COLORS.MainColor}
           headerText={styles.headerText}

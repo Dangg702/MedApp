@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, Image, View, TouchableOpacity} from 'react-native';
 import {COLORS, FONTSIZE, SPACING} from '../theme/theme';
+const defaultAvatar = require('../assets/image/avatar.png');
 
 const HomeHeader = (props: any) => {
   return (
@@ -21,9 +22,9 @@ const HomeHeader = (props: any) => {
       </View>
       {props.isLogin && (
         <Image
-          source={{uri: props.avatarUrl}}
-          style={[styles.profileImage, props.profileImageStyle]}
-        />
+        source={props.avatarUrl ? {uri: props.avatarUrl} : defaultAvatar}
+        style={[styles.profileImage, props.profileImageStyle]}
+      />
       )}
     </View>
   );

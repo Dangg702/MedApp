@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import {BORDERRADIUS, COLORS, FONTSIZE, SPACING} from '../theme/theme';
 import Icon from 'react-native-vector-icons/Feather';
@@ -27,7 +28,6 @@ import {API_URL} from '@env';
 const AppointmentCard = (props: any) => {
   const dispatch = useDispatch();
   const scheduledData = useSelector((state: RootState) => state.appointment);
-  // console.log('AppointmentCard scheduledData: ', scheduledData);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +44,6 @@ const AppointmentCard = (props: any) => {
     patientId,
     aptmTimeType,
   } = props.data;
-  console.log('patientId1: ', patientId);
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -177,7 +176,7 @@ const AppointmentCard = (props: any) => {
     </TouchableOpacity>
   );
 };
-
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   breakLine: {
     width: '100%',
@@ -197,6 +196,7 @@ const styles = StyleSheet.create({
     marginHorizontal: SPACING.space_18,
     marginBottom: SPACING.space_20,
     height: 168,
+    width: width*0.96,
   },
   doctorImage: {
     width: 64,
@@ -209,7 +209,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: SPACING.space_15,
     flex: 1,
-    width: '100%',
+    // width: '100%',
+    width: width*0.8,
     height: 'auto',
   },
   doctorName: {
@@ -221,6 +222,8 @@ const styles = StyleSheet.create({
     color: COLORS.White,
     marginBottom: SPACING.space_8,
     fontSize: FONTSIZE.size_16,
+    flexWrap: 'wrap',
+    width: width*0.96, // Đảm bảo chữ nằm trong khung
   },
   appointmentDetailsWrapper: {
     flexDirection: 'row',

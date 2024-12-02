@@ -28,6 +28,8 @@ import {
 const {width} = Dimensions.get('window');
 
 const SignUpScreen = ({navigation}: any) => {
+  const [firstName, setFisrtName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -55,12 +57,12 @@ const SignUpScreen = ({navigation}: any) => {
     } else {
       // call api to register
       let newUser = {
+        firstName,
+        lastName,
         email,
         password,
       };
-      console.log('new user', newUser);
       let response = await registerUser(newUser);
-      console.log('handleStep', response);
       if (response && response.errCode === 0) {
         navigation.navigate('LogIn');
       } else {
@@ -104,9 +106,8 @@ const SignUpScreen = ({navigation}: any) => {
           )}
           {step === 's2' && (
             <View>
-              <Text style={styles.heading}>Nhập mã OTP</Text>
               <Text style={styles.heading}>
-                Nhập mã xác thực đã được gửi đến email abc12@gmail.com
+                Nhập mã xác thực đã được gửi đến email {email}
               </Text>
               <TextInput
                 style={styles.input}
@@ -128,10 +129,25 @@ const SignUpScreen = ({navigation}: any) => {
               <Text style={styles.heading}>Hoàn tất đăng ký</Text>
               <TextInput
                 style={styles.input}
+                placeholder="Tên"
+                placeholderTextColor={COLORS.LightGrey}
+                onChangeText={textInput => setLastName(textInput)}
+                value={lastName}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Họ"
+                placeholderTextColor={COLORS.LightGrey}
+                onChangeText={textInput => setFisrtName(textInput)}
+                value={firstName}
+              />
+              <TextInput
+                style={styles.input}
                 placeholder="Nhập mật khẩu"
                 placeholderTextColor={COLORS.LightGrey}
                 onChangeText={textInput => setPassword(textInput)}
                 value={password}
+                secureTextEntry
               />
               <View style={[styles.inputBox, styles.input]}>
                 <TextInput
@@ -140,6 +156,7 @@ const SignUpScreen = ({navigation}: any) => {
                   placeholderTextColor={COLORS.LightGrey}
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
+                  secureTextEntry
                 />
                 <Icon
                   name="eye-off"

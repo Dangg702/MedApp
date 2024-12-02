@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 100,
     marginRight: SPACING.space_10,
+    objectFit: 'cover',
   },
   info: {
     flex: 1,
