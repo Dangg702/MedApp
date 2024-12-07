@@ -123,7 +123,7 @@ const getUserScheduled = async () => {
     if (response) {
       Alert.alert('Bạn đã đặt lịch thành công, Vui lòng kiểm tra email.');
       getUserScheduled();
-      navigation.navigate('Scheduled');
+      navigation.navigate('Home');
     } else {
       Alert.alert('Đặt lịch thất bại');
     }
